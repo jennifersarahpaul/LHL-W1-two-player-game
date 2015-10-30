@@ -1,42 +1,74 @@
+# TWO PLAYER MATH GAME
+# Each player starts with 3 points, first player to 0 points loses
+# Correct math answer = 1pt, wrong math answer = -1. 
+
 require 'pry'
 
 
-first_number = 3 #Math.random.round
-
-
-second_number = 3 #Math.random.round
-
-puts "Player 1: What does #{first_number} + #{second_number} equal?"
-player1_answer = gets.chomp.to_i
-
-def game
-  player1_points = 3
-  while player1_points > 0
-    if player1_answer == (first_number + second_number)
-      puts "You are correct"
-      player1_points += 1
-    else
-      puts "You are wrong"
-      player1_points -= 1
-    end
-    puts "You now have #{player1_points} points"
-  end
+def numbers                           
+  @first_number = 1 + Random.rand(20)
+  @second_number = 1 + Random.rand(20)
 end
-game
 
 
-game keeps going while (player1_points > 0) && (player2_points > 0)
+def players(player1, player2)
+  @player1 = player1
+  @player2 = player2
+end
 
-# PSEUDOCODE
 
-initialized: players 1 & 2 start with 3 points
+def question
+  numbers
+  puts "What does #{@first_number} + #{@second_number} equal?"
+  @player_answer = gets.chomp.to_i
+end
 
-method: computer selects two random numbers, assigns them first_number and second_number
 
-method: player inputs an answer to the prompted question. method (game) does the math and adjusts your score
+def turn(player1, player2)
+  players(player1, player2)
+  question
+  if @player_answer == (@first_number + @second_number)
+    puts "You, #{player1}, are correct"
+    @player1_points += 1
+  else
+    puts "You, #{player1}, are wrong"
+    @player1_points -= 1
+  end
+  puts "#{player1}, you now have #{@player1_points} points"
 
-loop: player 1 takes a turn, program checks if player1_points > 0, then player 2 takes a turn, program checks if player2_points > 0
-      if the loop breaks, print out who won and their winning score
+  question
+  if @player_answer == (@first_number + @second_number)
+    puts "You, #{player2}, are correct"
+    @player2_points += 1
+  else
+    puts "You, #{player2}, are wrong"
+    @player2_points -= 1
+  end
+  puts "#{player2}, you now have #{@player2_points} points"
+
+end
+
+
+def game(player1, player2)
+  players(player1, player2)
+  @player1_points = 3
+  @player2_points = 3
+  while (@player1_points > 0) && (@player2_points > 0)
+    turn(player1, player2)
+  end
+  puts "#{@player} wins with #{@player_points}!"
+end
+
+game("Jenn", "Tigner")
+
+
+
+
+
+# Remember to also seperate your I/O (Input/output) methods from your logic methods. 
+# Logic methods will not use puts or gets and instead change the state of the game or perform 
+# other logic that other methods will perhaps tell or ask the user about.
+
 
 
 
