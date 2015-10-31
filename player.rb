@@ -6,10 +6,3 @@ class Player
     @score = score
   end
 end
-
-
-
-
-
-
-

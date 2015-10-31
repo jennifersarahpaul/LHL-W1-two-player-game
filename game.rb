@@ -1,5 +1,6 @@
 require_relative 'player'
 require 'pry'
+require 'colorize'
 
 class Game
 
@@ -13,23 +14,26 @@ class Game
   def numbers                           
     @first_number = 1 + Random.rand(20)
     @second_number = 1 + Random.rand(20)
+    @operation = [:+, :-, :*, :/].sample                  #Chooses a different operation every time
   end
 
 # Displays the math question and gets the user's answer
   def question(currentplayer)
     numbers
-    puts "#{currentplayer.name}: What does #{@first_number} + #{@second_number} equal?"
+    puts "#{currentplayer.name}: What does #{@first_number} #{@operation} #{@second_number} equal?"
     @player_answer = gets.chomp.to_i
+    expr = "#{@first_number}"+"#{@operation}"+"#{@second_number}"        # A string of the question
+    @answer = eval(expr)                     # Takes the string and evaluates it as a math question
   end
 
   # Outputs if the user got the right answer, and displays the new score
   def turn(currentplayer)
     question(currentplayer)
-    if @player_answer == (@first_number + @second_number)
-      puts "You, #{currentplayer.name}, are correct"
+    if @player_answer == @answer
+      puts "You, #{currentplayer.name}, are correct".colorize(:green)
       currentplayer.score += 1
     else
-      puts "You, #{currentplayer.name}, are wrong"
+      puts "You, #{currentplayer.name}, are wrong".colorize(:red)
       currentplayer.score -= 1
     end
     puts "#{currentplayer.name}, you now have #{currentplayer.score} points"
@@ -43,6 +47,7 @@ class Game
       turn(@player2)
     end
     winner(@player1, @player2)
+    repeat
   end
 
 # Displays the winner and their final score
@@ -57,19 +62,11 @@ class Game
   end
 end
 
-
-
-# BONUS ACTIVITIES: 
-#
-# 1. Colourize! Add colour to your output. Bad outcomes = red and good outcomes = green.
-#    Tip: Look for gems that can help make this easier for you.
-#
-# 2. Better Math. Instead of just prompting the user for addition questions, randomize 
-#    that part too. Ask either addition, subtraction or multiplication questions.
-#
-# 4. Restarting the Game. Instead of having to restart the ruby script, when the game 
-#    finishes, ask if they want to play again and do so based on their response.
-#
-# 5. Player Score. Restarting the game does not ask the players for their name again, it 
-#    assumes that the same people are playing again. Now you can keep track of their score 
-#    and at the end of each game let them know the player scores.
+# If the player wants to, play again
+def repeat
+  @player1.score = 3
+  @player2.score = 3
+  puts "Do you want to play again? (yes/no)"
+  answer = gets.chomp.downcase
+  rungame if answer == "yes"
+end
